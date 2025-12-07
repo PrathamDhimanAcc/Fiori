@@ -1,0 +1,196 @@
+<mvc:View
+	controllerName="trainingconnections.controller.CreateConnection"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+    xmlns:form="sap.ui.layout.form"
+	xmlns:c="sap.ui.core"
+	displayBlock="true"
+	height="100%"
+	busyIndicatorDelay="0"
+>
+<Page>
+    <content>
+        <form:SimpleForm>
+            <form:content>
+                <Label
+                    text="Carrier ID"
+                    labelFor="carrierInput"
+                />
+                <Input
+                    id="carrierInput"
+                    required="true"
+                    type="Text"
+                    value="{ 
+                        path: 'newConn>/CarrierID',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength: 3 }
+                    }"
+                />
+                <Label
+                    text="Connection ID"
+                    labelFor="connectionInput"
+                />
+                <Input
+                    id="connectionInput"
+                    required="true"
+                    type="Text"
+                    value="{ 
+                        path: 'newConn>/ConnectionID',
+                        type : 'sap.ui.model.odata.type.String'
+                    }"
+                />
+                <Label
+                    text="Airport From ID"
+                    labelFor="airportFromInput"
+                />
+                <Input
+                    id="airportFromInput"
+                    type="Text"
+                    value="{ 
+                        path: 'newConn>/AirportFromID',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Airport To ID"
+                    labelFor="airportToInput"
+                    required="true"
+                />
+                <Input
+                    id="airportToInput"
+                    type="Text"
+                    value="{ 
+                        path : 'newConn>/AirportToID',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Country From"
+                    labelFor="countryFromInput"
+                />
+                <Input
+                    id="countryFromInput"
+                    required="true"
+                    type="Text"
+                    value="{
+                        path : 'newConn>/CountryFrom',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Country To"
+                    labelFor="countryToInput"
+                />
+                <Input
+                    id="countryToInput"
+                    required="true"
+                    type="Text"
+                    value="{
+                        path : 'newConn>/CountryTo',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="City From"
+                    labelFor="cityFromInput"
+                />
+                <Input
+                    id="cityFromInput"
+                    required="false"
+                    type="Text"
+                    value="{ 
+                        path: 'newConn>/CityFrom',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength: 40 }
+                    }"
+                />
+                <Label
+                    text="City To"
+                    labelFor="cityToInput"
+                />
+                <Input
+                    id="cityToInput"
+                    required="false"
+                    type="Text"
+                    value="{
+                        path : 'newConn>/CityTo',
+                        type: 'sap.ui.model.type.String',   
+                        constraints: { minLength: 1, maxLength : 40}
+                    }"
+                />
+
+                <Label
+                    text="Price"
+                    labelFor="idPriceInput"
+                />
+
+                <Input
+                    id="idPriceInput"
+                    value="{
+                    path : 'newConn>/Price',
+                    type : 'sap.ui.model.odata.type.Decimal',
+                    formatOptions: {
+                        decimals : 2,
+                        parseAsString : true
+                    },
+                    constraints: {
+                        minimum : 0,
+                        scale: 2
+                    }
+                }"
+                />
+
+                <Label
+                    text="Currency Code"
+                    labelFor="idCurrencyCodeInput"
+                />
+                <Input
+                    id="idCurrencyCodeInput"
+                    value="{
+                         path: 'newConn>/CurrencyCode'
+                    }"
+                />
+            </form:content>
+        </form:SimpleForm>
+        
+    </content>
+    <footer>
+        <Toolbar >
+            <Button
+                 accessibleRole="Default"
+                    visible="{
+                    path: 'message>/',
+                    formatter: '.hasMessages'
+                    }"
+                    text="Error"
+                    press="onOpenMessagePopover"
+                    type="{ 
+                    path : 'message>/' ,
+                    formatter : '.buttonTypeFormatter'
+                    }"
+                    width=""
+            >
+                
+            </Button>
+            <ToolbarSpacer ></ToolbarSpacer>
+            <Button
+                text="Cancel"
+                press="onCancelButtonPress"
+            >
+                
+            </Button>
+            <Button
+                text="Create"
+                type="Success"
+                press="onSubmitHandler"
+            >
+                
+            </Button>
+        </Toolbar>
+    </footer>
+</Page>
+</mvc:View>

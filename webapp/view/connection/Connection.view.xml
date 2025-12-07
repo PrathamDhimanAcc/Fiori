@@ -1,0 +1,195 @@
+<mvc:View
+    xmlns:form="sap.ui.layout.form"
+    controllerName="trainingconnections.controller.Connection"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:c="sap.ui.core"
+    displayBlock="true"
+    height="100%"
+    busyIndicatorDelay="0"
+>
+    <Page>
+        <ObjectHeader title="{UUID}">
+            <attributes>
+                <ObjectAttribute
+                    title="UUID"
+                    text="{UUID}"
+                />
+            </attributes>
+        </ObjectHeader>
+        <content>
+            <form:SimpleForm
+                editable="true"
+                layout="ResponsiveGridLayout"
+            >
+                <Label
+                    labelFor="idUUIDInput"
+                    text="UUID"
+                />
+                <Input
+                    id="idUUIDInput"
+                    type="Text"
+                    editable="false"
+                    value="{UUID}"
+                />
+                <Label
+                    labelFor="idCarrierIdInput"
+                    text="Carrier ID"
+                />
+                <Input
+                    id="idCarrierIdInput"
+                    type="Text"
+                    editable="false"
+                    value="{CarrierID}"
+                />
+                <Label
+                    text="Connection ID"
+                    labelFor="connectionIdDetailInput"
+                />
+                <Input
+                    id="connectionIdDetailInput"
+                    type="Text"
+                    editable="false"
+                    value="{ 
+                        path: 'ConnectionID'
+                    }"
+                />
+                <Label
+                    text="Airport From ID"
+                    labelFor="airportFromDetailInput"
+                />
+                <Input
+                    id="airportFromDetailInput"
+                    type="Text"
+                    value="{ 
+                        path: 'AirportFromID',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Airport To ID"
+                    labelFor="airportToDetailInput"
+                    required="true"
+                />
+                <Input
+                    id="airportToDetailInput"
+                    type="Text"
+                    value="{ 
+                        path : 'AirportToID',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Country From"
+                    labelFor="countryFromDetailInput"
+                />
+                <Input
+                    id="countryFromDetailInput"
+                    type="Text"
+                    value="{
+                        path : 'CountryFrom',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="Country To"
+                    labelFor="countryToDetailInput"
+                />
+                <Input
+                    id="countryToDetailInput"
+                    type="Text"
+                    value="{
+                        path : 'CountryTo',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength : 3 }
+                    }"
+                />
+                <Label
+                    text="City From"
+                    labelFor="cityFromDetailInput"
+                />
+                <Input
+                    id="cityFromDetailInput"
+                    type="Text"
+                    value="{ 
+                        path: 'CityFrom',
+                        type: 'sap.ui.model.type.String',
+                        constraints: { minLength: 1, maxLength: 40 }
+                    }"
+                />
+                <Label
+                    text="City To"
+                    labelFor="cityToDetailInput"
+                />
+                <Input
+                    id="cityToDetailInput"
+                    type="Text"
+                    value="{
+                        path : 'CityTo',
+                        type: 'sap.ui.model.type.String',   
+                        constraints: { minLength: 1, maxLength : 40}
+                    }"
+                />
+
+                <Label
+                    text="Price"
+                    labelFor="idPriceDetailInput"
+                />
+
+                <Input
+                    id="idPriceDetailInput"
+                    value="{
+                    path : 'Price',
+                    type : 'sap.ui.model.odata.type.Decimal',
+                    formatOptions: {
+                        decimals : 2,
+                        parseAsString : true
+                    },
+                    constraints: {
+                        minimum : 0,
+                        scale: 2
+                    }
+                }"
+                />
+
+                <Label
+                    text="Currency Code"
+                    labelFor="idCurrencyCodeDetailInput"
+                />
+                <Input
+                    id="idCurrencyCodeDetailInput"
+                    value="{
+                         path: 'CurrencyCode'
+                    }"
+                />
+            </form:SimpleForm>
+        </content>
+        <footer>
+            <Toolbar>
+                <Button
+                    accessibleRole="Default"
+                    visible="{
+                    path: 'message2>/',
+                    formatter: '.hasMessages'
+                    }"
+                    text="Error"
+                    press="onOpenMessagePopover"    
+                    type="{ 
+                    path : 'message2>/' ,
+                    formatter : '.buttonTypeFormatter'
+                    }"
+                    width=""
+                />
+                <ToolbarSpacer />
+                <Button
+                    text="Update"
+                    type="Success"
+                    press="onUpdateButtonPress"
+                />
+            </Toolbar>
+        </footer>
+    </Page>
+</mvc:View>

@@ -1,0 +1,156 @@
+<mvc:View
+    controllerName="trainingconnections.controller.Main"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+>
+    <Page
+        id="page"
+        title="{i18n>title}"
+    >
+        <subHeader>
+            <OverflowToolbar>
+                <!-- Default Search -->
+                <SearchField
+                    width="18rem"
+                    placeholder="Search (ID, City, Airport)"
+                    search=".onSearch"
+                    liveChange=".onLiveSearch"
+                />
+
+                <ToolbarSpacer />
+
+                <!-- Quick filters -->
+                <Label text="Carrier" />
+                <Input
+                    width="8rem"
+                    valueLiveUpdate="true"
+                    liveChange=".onFilterChanged"
+                    placeholder="e.g. LH"
+                    id="idCarrier"
+                />
+
+                <Label text="From" />
+                <Input
+                    width="8rem"
+                    valueLiveUpdate="true"
+                    liveChange=".onFilterChanged"
+                    placeholder="Airport (3)"
+                    id="idFrom"
+                />
+
+                <Label text="To" />
+                <Input
+                    width="8rem"
+                    valueLiveUpdate="true"
+                    liveChange=".onFilterChanged"
+                    placeholder="Airport (3)"
+                    id="idTo"
+                />
+
+                <ToolbarSpacer />
+
+                <!-- Create Button -->
+                <Button
+                    text="Create"
+                    type="Emphasized"
+                    icon="sap-icon://add"
+                    press=".openConnectionCreationDialog"
+                />
+            </OverflowToolbar>
+        </subHeader>
+
+        <!-- Table -->
+        <Table
+            id="idZRConnectionsTable"
+            selectionChange="onZRConnectionsTableSelectionChange"
+            itemPress="onZRConnectionsTableItemPress"
+            mode="MultiSelect"
+            growing="true"
+            growingScrollToLoad="true"
+            items="{
+           path: '/Z_R_CONNECTIONS',
+           parameters: {
+             $$groupId: '$auto',
+             $$updateGroupId: 'Connections',
+             $count: true
+           }
+         }"
+        >
+            <headerToolbar>
+                <OverflowToolbar>
+                    <Title text="Connections List" />
+                    <ToolbarSpacer />
+                    <Button
+                        activeIcon=""
+                        icon="sap-icon://action"
+                        visible="{utility>/connectionTable/deletionEnabled}"
+                        text="Approve"
+                        type="Accept"
+                        press="onApproveButtonPress"
+                    >
+                    </Button>
+                    <Button
+                        visible="{utility>/connectionTable/deletionEnabled}"
+                        icon="sap-icon://delete"
+                        press="handleDeleteRecord"
+                    />
+                </OverflowToolbar>
+            </headerToolbar>
+
+            <!-- Columns -->
+            <columns>
+                <Column width="15rem">
+                    <Text text="UUID" />
+                </Column>
+                <Column>
+                    <Text text="CarrierID" />
+                </Column>
+                <Column>
+                    <Text text="ConnectionID" />
+                </Column>
+                <Column>
+                    <Text text="AirportFromID" />
+                </Column>
+                <Column>
+                    <Text text="AirportToID" />
+                </Column>
+                <Column>
+                  <Text text="CountryFrom" />
+                </Column>
+                <Column>
+                    <Text text="CountryTo" />
+                </Column>
+                <Column>
+                    <Text text="Price" />
+                </Column>
+                <Column>
+                    <Text text="Currency" />
+                </Column>
+            </columns>
+
+            <!-- Items -->
+            <items>
+                <ColumnListItem
+                    type="Active"
+                >
+                    <cells>
+                        <Text
+                            text="{UUID}"
+                            maxLines="1"
+                        />
+                        <Text text="{CarrierID}" />
+                        <Text text="{ConnectionID}" />
+                        <Text text="{AirportFromID}" />
+                        <Text text="{AirportToID}" />
+                        <Text text="{CountryFrom}" />
+                        <Text text="{CountryTo}" />
+                        <Text
+                            text="{path: 'Price', type: 'sap.ui.model.odata.type.Decimal'}"
+                        />
+                        <Text text="{CurrencyCode}" />
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
+    </Page>
+</mvc:View>
