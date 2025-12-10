@@ -17,7 +17,7 @@
     },
     "dataSources": {
       "mainService": {
-        "uri": "/sap/opu/odata4/sap/zwb_connections_o4/srvd_a2x/sap/zconnections/0001/",
+        "uri": "/sap/opu/odata4/sap/zw_connections_o4/srvd_a2x/sap/zconnections/0001/",
         "type": "OData",
         "settings": {
           "annotations": [],

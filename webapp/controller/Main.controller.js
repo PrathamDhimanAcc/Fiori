@@ -41,8 +41,7 @@ sap.ui.define(
       },
 
       /**
-       * @params {void}
-       * @returns {void}
+       * @returns {Promise<void>}
        */
       async openConnectionCreationDialog() {
         /**@type {sap.ui.core.routing.Router} */
@@ -87,26 +86,26 @@ sap.ui.define(
           let subValid = true;
           /**@type {sap.m.Input} */
           let input = Fragment.byId("addConnectionDialog", id);
+          debugger;
           if (input) {
             try {
-              /**@type {sap.ui.model.Binding} */
+              /**@type {sap.ui.model.StaticBinding} */
+              debugger;
               const oBinding = input.getBinding("value");
-
+              console.log(typeof oBinding)
+              console.log(oBinding instanceof sap.ui.model.StaticBinding) 
               const oType = oBinding.getType();
-
-              if (oType && oType.validateValue) {
-                oType.validateValue(input.getValue());
-              }
+             
             } catch (error) {
               console.log("validation error ", error, id);
               isValid = false;
               subValid = false;
             } finally {
               if (!subValid) {
-                input.setValueState("Error");
+                input.setValueState(sap.ui.core.ValueState.Error);
                 this.setErrorValueText(input, id);
               } else {
-                input.setValueState("None");
+                input.setValueState(sap.ui.core.ValueState.None);
                 input.setValueStateText("");
               }
             }
@@ -164,8 +163,7 @@ sap.ui.define(
       },
 
       /**
-       * @param {void}
-       * @returns {void}
+       * @returns {Promise<void>} 
        */
       async onSubmitFragmentHandler() {
         if (!this.validateInputs()) {
@@ -238,30 +236,28 @@ sap.ui.define(
        * @param {sap.ui.base.Event} oEvent
        */
       onZRConnectionsTableItemPress(oEvent) {
-        /**@type {sap.m.ListItemBase} */
-        const oItem = oEvent.getParameter("listItem");
-
-        const oContext = oItem.getBindingContext();
-
-        const uuid = oContext.getProperty("UUID");
-
-        /**@type {sap.ui.core.routing.Router} */
-        const oRouter = this.getRouter();
-        oRouter.navTo("ConnDetail", {
-          id: uuid,
-        });
+        /** @type {{ listItem: sap.m.ListItemBase }} */
+          const { listItem } = /** @type {{ listItem: sap.m.ListItemBase }} */ (oEvent.getParameters());
+        
+          const oContext = listItem.getBindingContext();
+          
+          const uuid = oContext.getProperty("UUID");
+          
+          /**@type {sap.ui.core.routing.Router} */
+          const oRouter = this.getRouter();
+          oRouter.navTo("ConnDetail", {
+            id: uuid,
+          });
       },
       handleDeleteRecord() {
         /**@type {sap.m.Table} */
         const oTable = this.byId("idZRConnectionsTable");
-        /**@type {sap.m.ListItemBase[]} */
-        const items = oTable.getSelectedItems();
+        const items = oTable.getSelectedContexts()
 
-        /**@type {sap.ui.model.odata.v4.Context[]} */
-        const aContexts = items.map((item) => item.getBindingContext());
-
-        aContexts.forEach((context) => {
-          context.delete("Connections");
+        items.forEach((context) => {
+          if(context instanceof sap.ui.model.odata.v4.Context){
+            context.delete("Connections");
+          }
         });
 
         /**@type {sap.ui.model.odata.v4.ODataModel} */
@@ -277,20 +273,78 @@ sap.ui.define(
 
         /**@type {sap.m.Table} */
         const oTable = this.byId("idZRConnectionsTable");
-        /**@type {sap.m.ListItemBase[]} */
-        const items = oTable.getSelectedItems();
 
-        const aContexts = items.map((item) => item.getBindingContext());
+        const items = oTable.getSelectedItems()
 
-        aContexts.forEach((context) => {
-          /**@type {sap.ui.model.odata.v4.ODataContextBinding} */
-          const oAction = oBackendModel.bindContext(
-            "com.sap.gateway.srvd_a2x.zconnections.v0001.ApproveConnection(...)",
-            context
-          );
-          oAction.execute();
+        const contexts = items.map((item) => item.getBindingContext())
+
+        const aPromises = contexts.map((context) => {
+          if(context instanceof sap.ui.model.odata.v4.Context){
+            const oAction = oBackendModel.bindContext(
+              "com.sap.gateway.srvd_a2x.zconnections.v0001.ApproveConnection(...)",
+              context 
+            );
+            return oAction.execute()
+          }
+          return Promise.reject()
         });
+        oTable.setBusy(true)
+        Promise.all(aPromises).then().finally(() => {
+          oTable.setBusy(false)
+        })
       },
+      /**
+       * @param {string} amount
+       * @param {string} currencyCode
+       */
+      formatPrice(amount,currencyCode) {
+        if(amount && currencyCode) {
+          return amount + " " + currencyCode
+        } 
+        return ""
+      },
+      /**
+       * @param {string} status
+       */
+      formatApproveStatusText(status) {
+        switch (status) {
+          case 'P':
+            return "Pending"
+          case 'X':
+              return "Rejected"
+          case 'A':
+              return "Approved"
+          default:
+              return "Unknown"
+        }
+      },
+      /**
+       * @param {string} status
+       */
+      formatApproveStatusIcon(status) {
+        switch (status) {
+          case 'P':
+            return "sap-icon://pending"
+          case 'X':
+              return "sap-icon://decline"
+          case 'A':
+              return "sap-icon://verified"
+          default:
+              return "sap-icon://badge"
+        }
+      },
+      formatApproveStatusState(status) {
+        switch (status) {
+          case 'P':
+            return "Information"
+          case 'X':
+              return "Error"
+          case 'A':
+              return "Success"
+          default:
+              return "None"
+        }
+      }
     });
   }
 );

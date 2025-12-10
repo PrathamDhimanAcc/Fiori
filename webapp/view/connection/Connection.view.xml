@@ -165,6 +165,17 @@
                          path: 'CurrencyCode'
                     }"
                 />
+                <Label
+                    text="Is Approved"
+                    labelFor="idApprovalStatusInput"
+                />
+                <Input
+                    id="idApprovalStatusInput"
+                    editable="false"
+                    value="{
+                         path: 'ApprovalStatus'
+                    }"
+                />
             </form:SimpleForm>
         </content>
         <footer>

@@ -98,12 +98,11 @@ sap.ui.define(
             let input = this.byId(id);
             if (input) {
               try {
-                /**@type {sap.ui.model.Binding} */
-                const oBinding = input.getBinding("value");
-
+                const oBinding = input.getBinding("value"); // dynamic, no cast needed
+                // @ts-ignore
                 const oType = oBinding.getType();
 
-                if (oType && oType.validateValue) {
+                if (oType && typeof oType.validateValue === "function") {
                   oType.validateValue(input.getValue());
                 }
               } catch (error) {
@@ -112,10 +111,10 @@ sap.ui.define(
                 subValid = false;
               } finally {
                 if (!subValid) {
-                  input.setValueState("Error");
+                  input.setValueState(sap.ui.core.ValueState.Error);
                   this.setErrorValueText(input, id);
                 } else {
-                  input.setValueState("None");
+                  input.setValueState(sap.ui.core.ValueState.None);
                   input.setValueStateText("");
                 }
               }
@@ -193,7 +192,6 @@ sap.ui.define(
           return Object.keys(oData).length > 0;
         },
         /**
-         * @param {void}
          * @returns {void}
          */
         onSubmitHandler() {
@@ -204,6 +202,9 @@ sap.ui.define(
 
           /**@type {sap.ui.model.odata.v4.ODataModel} */
           const oBackendModel = this.getView().getModel();
+
+          /**resetting the previous unsuccessfull batch request made to the backend */
+          oBackendModel.resetChanges("Connections")
 
           /**@type {sap.ui.model.json.JSONModel} */
           const oJsonModel = this.getView().getModel("newConn");

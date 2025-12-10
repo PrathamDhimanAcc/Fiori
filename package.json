@@ -12,7 +12,8 @@
   "devDependencies": {
     "@ui5/cli": "^4.0.16",
     "@sap/ux-ui5-tooling": "1",
-    "@sap-ux/ui5-middleware-fe-mockserver": "2"
+    "@sap-ux/ui5-middleware-fe-mockserver": "2",
+    "@openui5/ts-types": "1.120.1"
   },
   "scripts": {
     "start": "fiori run --open \"test/flp.html#app-preview\"",

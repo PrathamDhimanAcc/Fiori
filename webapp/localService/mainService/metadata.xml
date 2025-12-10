@@ -69,11 +69,11 @@
                 <Property Name="CountryTo" Type="Edm.String" Nullable="false" MaxLength="3"/>
                 <Property Name="Price" Type="Edm.Decimal" Nullable="false" Precision="15" Scale="2"/>
                 <Property Name="CurrencyCode" Type="Edm.String" Nullable="false" MaxLength="3"/>
-                <Property Name="IsApproved" Type="Edm.Boolean" Nullable="false"/>
+                <Property Name="ApprovalStatus" Type="Edm.String" Nullable="false" MaxLength="1"/>
                 <Property Name="CreatedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="CreatedAt" Type="Edm.TimeOfDay" Nullable="false"/>
+                <Property Name="CreatedAt" Type="Edm.DateTimeOffset" Precision="7"/>
                 <Property Name="ChangedBy" Type="Edm.String" Nullable="false" MaxLength="12"/>
-                <Property Name="ChangedAt" Type="Edm.TimeOfDay" Nullable="false"/>
+                <Property Name="ChangedAt" Type="Edm.DateTimeOffset" Precision="7"/>
                 <Property Name="SAP__Messages" Type="Collection(com.sap.gateway.srvd_a2x.zconnections.v0001.SAP__Message)" Nullable="false"/>
             </EntityType>
             <ComplexType Name="SAP__Message">
@@ -116,6 +116,12 @@
             <Annotations Target="SAP__self.Z_R_CONNECTIONSType/CurrencyCode">
                 <Annotation Term="SAP__common.IsCurrency"/>
             </Annotations>
+            <Annotations Target="SAP__self.Z_R_CONNECTIONSType/ApprovalStatus">
+                <Annotation Term="SAP__common.IsUpperCase"/>
+                <Annotation Term="SAP__common.Label" String="Connection Status"/>
+                <Annotation Term="SAP__common.Heading" String="Conneciton Status"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Connection status"/>
+            </Annotations>
             <Annotations Target="SAP__self.Z_R_CONNECTIONSType/CreatedBy">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
@@ -123,28 +129,30 @@
                 <Annotation Term="SAP__common.QuickInfo" String="Created By User"/>
                 <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_CREATION_USER"/>
             </Annotations>
+            <Annotations Target="SAP__self.Z_R_CONNECTIONSType">
+                <Annotation Term="SAP__common.CreatedBy" Path="CreatedBy"/>
+                <Annotation Term="SAP__common.CreatedAt" Path="CreatedAt"/>
+                <Annotation Term="SAP__common.Label" String="Connections CDS view entity Model"/>
+                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
+            </Annotations>
             <Annotations Target="SAP__self.Z_R_CONNECTIONSType/CreatedAt">
                 <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Created At"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Creation Time"/>
-                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_CREATION_TIME"/>
+                <Annotation Term="SAP__common.Label" String="Created On"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Creation Date Time"/>
+                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_CREATION_TSTMPL"/>
             </Annotations>
             <Annotations Target="SAP__self.Z_R_CONNECTIONSType/ChangedBy">
                 <Annotation Term="SAP__core.Computed"/>
                 <Annotation Term="SAP__common.IsUpperCase"/>
-                <Annotation Term="SAP__common.Label" String="Created By"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Created By User"/>
-                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_CREATION_USER"/>
+                <Annotation Term="SAP__common.Label" String="Changed By"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Local Instance Last Changed By User"/>
+                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_LOCINST_LASTCHANGE_USER"/>
             </Annotations>
             <Annotations Target="SAP__self.Z_R_CONNECTIONSType/ChangedAt">
                 <Annotation Term="SAP__core.Computed"/>
-                <Annotation Term="SAP__common.Label" String="Created At"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Creation Time"/>
-                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_CREATION_TIME"/>
-            </Annotations>
-            <Annotations Target="SAP__self.Z_R_CONNECTIONSType">
-                <Annotation Term="SAP__common.Label" String="Connections CDS view entity Model"/>
-                <Annotation Term="SAP__common.Messages" Path="SAP__Messages"/>
+                <Annotation Term="SAP__common.Label" String="Changed On"/>
+                <Annotation Term="SAP__common.QuickInfo" String="Local Instance Last Change Date Time"/>
+                <Annotation Term="SAP__common.DocumentationRef" String="urn:sap-com:documentation:key?=type=DE&amp;id=ABP_LOCINST_LASTCHANGE_TSTMPL"/>
             </Annotations>
             <Annotations Target="SAP__self.Container/Z_R_CONNECTIONS">
                 <Annotation Term="SAP__capabilities.SearchRestrictions">
@@ -223,10 +231,6 @@
                 </Annotation>
                 <Annotation Term="SAP__capabilities.KeyAsSegmentSupported"/>
                 <Annotation Term="SAP__capabilities.AsynchronousRequestsSupported"/>
-            </Annotations>
-            <Annotations Target="SAP__self.Z_R_CONNECTIONSType/IsApproved">
-                <Annotation Term="SAP__common.Label" String="Truth Value"/>
-                <Annotation Term="SAP__common.QuickInfo" String="Truth Value: True/False"/>
             </Annotations>
         </Schema>
     </edmx:DataServices>
