@@ -103,7 +103,8 @@ sap.ui.define(
                 const oType = oBinding.getType();
 
                 if (oType && typeof oType.validateValue === "function") {
-                  oType.validateValue(input.getValue());
+                  const rawValue = input.getValue().replace(/,/g, '');
+                  oType.validateValue(rawValue);
                 }
               } catch (error) {
                 console.log("validation error ", error, id);
@@ -131,7 +132,7 @@ sap.ui.define(
         setErrorValueText(oInput, inputID) {
           switch (inputID) {
             case "idPriceInput":
-              oInput.setValueStateText("Please enter a valid price");
+              oInput.setValueStateText("Please enter a  price > 99");
               break;
             case "idCurrencyCodeInput":
               oInput.setValueStateText("Please enter a valid currency code");
@@ -209,12 +210,15 @@ sap.ui.define(
           /**@type {sap.ui.model.json.JSONModel} */
           const oJsonModel = this.getView().getModel("newConn");
 
-          /**@type {object<any>} */
+          /**@type {object} */
           const oData = oJsonModel.getData();
-
           /**@type {sap.ui.model.odata.v4.Context} */
           const oContext = this._oConnBinding.create(oData);
 
+          const oView = this.getView()
+
+          oView.setBusy(true)
+          
           oBackendModel.submitBatch("Connections").finally(() => {
             oContext
               .created()
@@ -224,6 +228,8 @@ sap.ui.define(
               .catch(() => {
                 MessageBox.error("The connection was not created");
                 oContext.delete();
+              }).finally(() => {
+                oView.setBusy(false)
               });
           });
         },

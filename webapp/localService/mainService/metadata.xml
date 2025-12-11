@@ -88,6 +88,9 @@
             <Action Name="ApproveConnection" IsBound="true">
                 <Parameter Name="_it" Type="com.sap.gateway.srvd_a2x.zconnections.v0001.Z_R_CONNECTIONSType" Nullable="false"/>
             </Action>
+            <Action Name="RejectConnection" IsBound="true">
+                <Parameter Name="_it" Type="com.sap.gateway.srvd_a2x.zconnections.v0001.Z_R_CONNECTIONSType" Nullable="false"/>
+            </Action>
             <EntityContainer Name="Container">
                 <EntitySet Name="Z_R_CONNECTIONS" EntityType="com.sap.gateway.srvd_a2x.zconnections.v0001.Z_R_CONNECTIONSType"/>
             </EntityContainer>

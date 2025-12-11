@@ -92,12 +92,9 @@ sap.ui.define(
               /**@type {sap.ui.model.StaticBinding} */
               debugger;
               const oBinding = input.getBinding("value");
-              console.log(typeof oBinding)
-              console.log(oBinding instanceof sap.ui.model.StaticBinding) 
+              // @ts-ignore
               const oType = oBinding.getType();
-             
             } catch (error) {
-              console.log("validation error ", error, id);
               isValid = false;
               subValid = false;
             } finally {
@@ -163,7 +160,7 @@ sap.ui.define(
       },
 
       /**
-       * @returns {Promise<void>} 
+       * @returns {Promise<void>}
        */
       async onSubmitFragmentHandler() {
         if (!this.validateInputs()) {
@@ -176,7 +173,7 @@ sap.ui.define(
         /**@type {sap.ui.model.json.JSONModel} */
         const oJsonModel = this.getView().getModel("newConn");
 
-        /**@type {object<any>} */
+        /**@type {object} */
         const oData = oJsonModel.getData();
         /**@type {sap.ui.model.odata.v4.ODataListBinding} */
         const oBinding = this.byId("idZRConnectionsTable").getBinding("items");
@@ -199,8 +196,6 @@ sap.ui.define(
           MessageBox.success("Successfully created a connection.");
         } catch (err) {
           MessageBox.error("Unexpected error: " + err.message);
-        } finally {
-          const oMessageModel = Messaging.getMessageModel();
         }
       },
 
@@ -237,25 +232,27 @@ sap.ui.define(
        */
       onZRConnectionsTableItemPress(oEvent) {
         /** @type {{ listItem: sap.m.ListItemBase }} */
-          const { listItem } = /** @type {{ listItem: sap.m.ListItemBase }} */ (oEvent.getParameters());
-        
-          const oContext = listItem.getBindingContext();
-          
-          const uuid = oContext.getProperty("UUID");
-          
-          /**@type {sap.ui.core.routing.Router} */
-          const oRouter = this.getRouter();
-          oRouter.navTo("ConnDetail", {
-            id: uuid,
-          });
+        const { listItem } = /** @type {{ listItem: sap.m.ListItemBase }} */ (
+          oEvent.getParameters()
+        );
+
+        const oContext = listItem.getBindingContext();
+
+        const uuid = oContext.getProperty("UUID");
+
+        /**@type {sap.ui.core.routing.Router} */
+        const oRouter = this.getRouter();
+        oRouter.navTo("ConnDetail", {
+          id: uuid,
+        });
       },
       handleDeleteRecord() {
         /**@type {sap.m.Table} */
         const oTable = this.byId("idZRConnectionsTable");
-        const items = oTable.getSelectedContexts()
+        const items = oTable.getSelectedContexts();
 
         items.forEach((context) => {
-          if(context instanceof sap.ui.model.odata.v4.Context){
+          if (context instanceof sap.ui.model.odata.v4.Context) {
             context.delete("Connections");
           }
         });
@@ -274,48 +271,62 @@ sap.ui.define(
         /**@type {sap.m.Table} */
         const oTable = this.byId("idZRConnectionsTable");
 
-        const items = oTable.getSelectedItems()
+        const items = oTable.getSelectedItems();
 
-        const contexts = items.map((item) => item.getBindingContext())
+        const contexts = items.map((item) => item.getBindingContext());
 
         const aPromises = contexts.map((context) => {
-          if(context instanceof sap.ui.model.odata.v4.Context){
+          if (context instanceof sap.ui.model.odata.v4.Context) {
             const oAction = oBackendModel.bindContext(
               "com.sap.gateway.srvd_a2x.zconnections.v0001.ApproveConnection(...)",
-              context 
+              context
             );
-            return oAction.execute()
+            return oAction.execute();
           }
-          return Promise.reject()
+          return Promise.reject();
         });
-        oTable.setBusy(true)
-        Promise.all(aPromises).then().finally(() => {
-          oTable.setBusy(false)
-        })
+        const oView = this.getView();
+        oView.setBusy(true);
+        Promise.all(aPromises)
+          .then((results) => {
+            // refresh the table
+            const oBinding = oTable.getBinding("items");
+            if (oBinding) {
+              oBinding.refresh();
+            }
+          })
+          .catch((errors) => {
+            // handle rejected promises
+            console.error(errors);
+            MessageBox.error("Some approvals failed");
+          })
+          .finally(() => {
+            oView.setBusy(false);
+          });
       },
       /**
        * @param {string} amount
        * @param {string} currencyCode
        */
-      formatPrice(amount,currencyCode) {
-        if(amount && currencyCode) {
-          return amount + " " + currencyCode
-        } 
-        return ""
+      formatPrice(amount, currencyCode) {
+        if (amount && currencyCode) {
+          return amount + " " + currencyCode;
+        }
+        return "";
       },
       /**
        * @param {string} status
        */
       formatApproveStatusText(status) {
         switch (status) {
-          case 'P':
-            return "Pending"
-          case 'X':
-              return "Rejected"
-          case 'A':
-              return "Approved"
+          case "P":
+            return "Pending";
+          case "X":
+            return "Rejected";
+          case "A":
+            return "Approved";
           default:
-              return "Unknown"
+            return "Unknown";
         }
       },
       /**
@@ -323,28 +334,55 @@ sap.ui.define(
        */
       formatApproveStatusIcon(status) {
         switch (status) {
-          case 'P':
-            return "sap-icon://pending"
-          case 'X':
-              return "sap-icon://decline"
-          case 'A':
-              return "sap-icon://verified"
+          case "P":
+            return "sap-icon://pending";
+          case "X":
+            return "sap-icon://decline";
+          case "A":
+            return "sap-icon://verified";
           default:
-              return "sap-icon://badge"
+            return "sap-icon://badge";
         }
       },
       formatApproveStatusState(status) {
         switch (status) {
-          case 'P':
-            return "Information"
-          case 'X':
-              return "Error"
-          case 'A':
-              return "Success"
+          case "P":
+            return "Information";
+          case "X":
+            return "Error";
+          case "A":
+            return "Success";
           default:
-              return "None"
+            return "None";
         }
-      }
+      },
+      /**
+       * @param {sap.ui.base.Event} oEvent
+       */
+      onRejectButtonPress(oEvent) {
+         /**@type {sap.ui.model.odata.v4.ODataModel} */
+        const oBackendModel = this.getView().getModel();
+
+        /**@type {sap.m.Table} */
+        const oTable = this.byId("idZRConnectionsTable");
+
+        const contexts = oTable.getSelectedContexts()
+
+        const Promises = contexts.map((context) => {
+          if(context instanceof sap.ui.model.odata.v4.Context){
+            const oAction = oBackendModel.bindContext('com.sap.gateway.srvd_a2x.zconnections.v0001.RejectConnection(...)',context)
+            
+            return oAction.execute('Connections')
+          }
+        })
+        const oView = this.getView();
+        oView.setBusy(true);
+        Promise.all(Promises).then(() => {
+
+        }).finally(
+          oView.setBusy(false)
+        ) 
+      } 
     });
   }
 );
