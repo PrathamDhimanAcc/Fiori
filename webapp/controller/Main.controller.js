@@ -32,7 +32,7 @@ sap.ui.define(
           CountryTo: "", // City From
           CityTo: "", // Country From (label says Country From but bound to cityTo)
           CityFrom: "",
-          Price: "0.00", // Price
+          Price: "0.00", // Pric
           CurrencyCode: "USD", // Default currency
         };
 
