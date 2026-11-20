@@ -27,7 +27,7 @@ sap.ui.define(
           CarrierID: "INR", // 3 chars max
           ConnectionID: "", // 4 chars max
           AirportFromID: "", // Airport From ID
-          AirportToID: "", // Airport To ID
+          AirportToID: "", // Airport To I
           CountryFrom: "", // Country To
           CountryTo: "", // City From
           CityTo: "", // Country From (label says Country From but bound to cityTo)
