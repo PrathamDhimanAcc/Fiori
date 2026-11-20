@@ -33,7 +33,7 @@ sap.ui.define(
           CityTo: "", // Country From (label says Country From but bound to cityTo)
           CityFrom: "",
           Price: "0.00", // Pric
-          CurrencyCode: "USD", // Default curren
+          CurrencyCode: "USD", // Default curre
         };
 
         const oModel = new JSONModel(oDefaultData);
