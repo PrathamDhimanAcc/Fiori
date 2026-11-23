@@ -26,7 +26,7 @@ sap.ui.define(
         var oDefaultData = {
           CarrierID: "INR", // 3 chars max
           ConnectionID: "", // 4 chars max
-          AirportFromID: "", // Airport From I
+          AirportFromID: "", // 
           AirportToID: "", // Airport To I
           CountryFrom: "", // Country To
           CountryTo: "", // City From
