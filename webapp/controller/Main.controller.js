@@ -30,7 +30,7 @@ sap.ui.define(
           AirportToID: "", // Airport To I
           CountryFrom: "", // Country To
           CountryTo: "", // City From
-          CityTo: "", // Country From (label says Country From but bound to cityTo)
+          CityTo: "", // Country From 
           CityFrom: "",
           Price: "0.00", // Pric
           CurrencyCode: "USD", // Default curre
